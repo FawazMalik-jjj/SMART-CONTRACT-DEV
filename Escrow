@@ -1,0 +1,45 @@
+//SPDX-Licenser-Identifier : MIT
+pragma solidity ^0.6.0;
+
+contract Escrow {
+
+   // this enum stores the current state of transaction
+   enum State {AWAITING_PAYMENT, AWAITING_DELIVERY, COMPLETE}
+
+   //variable to hold the state
+    State public currentState;
+
+   //buyer address
+   address public buyer;
+
+   //seller address
+   address payable public seller;
+
+   //Ensure that only the buyer cann call functions the modifier is attached to
+   modifier onlySeller() {
+       require(msg.sender==seller, "Only the seller can call this function!");
+       _;
+
+   }
+   //Set up the buyer and seller addresses
+   constructor(address _buyer, address payable _seller) public {
+    buyer = _buyer;
+    seller = _seller;
+   }
+
+   //only the buyer can call this function to deposit ether to the contract
+   function deposit() onlySeller external payable {
+       require(currentState==State.AWAITING_PAYMENT, "Buyer has already deposited Ether to the contract!");
+       currentState = State.AWAITING_DELIVERY;
+   }
+
+
+   //the buyer calls this function to confirm that they have received the item for sale
+   function confirmDelivery() onlySeller external {
+       require (currentState==State.AWAITING_DELIVERY, "Delivery has not been confirmed yet!");
+       seller.transfer(address(this).balance);
+       currentState = State.COMPLETE;
+
+   }
+
+}
