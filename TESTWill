@@ -1,5 +1,12 @@
 //SPDX-License-Identifier : MIT
 
+//Essentially, a smart contract can be thought of as a programmable 
+// intermediary which can facilitate transactions between parties
+//and automatically settling disputes . which is perfect for something
+//like a 'last will and testament' to distribute an inheritance
+//to various beneficiaries
+
+
 pragma solidity ^0.5.7;
 
 contract LastWillandTestament {
@@ -37,11 +44,40 @@ contract LastWillandTestament {
     }
 
 
+    struct Beneficiary {
+    address addr;
+    uint balance;
+}
+
+Beneficiary[] public beneficiaries;
+
+function addBeneficiary(address _addr, uint _balance) public {
+    beneficiaries.push(Beneficiary(_addr, _balance));
+}
+
+function updateBeneficiary(uint index, uint _balance) public {
+    beneficiaries[index].balance = _balance;
+}
+
+function getBeneficiary(uint index) public view returns (address, uint) {
+    return (beneficiaries[index].addr, beneficiaries[index].balance);
+}
+
+function convertEtherToWei(uint256 etherAmount) public pure returns (uint256) {
+    return etherAmount * 1 ether;
+   
+}
+
+
+
+
     function distributedFunds() private isOwnerDeceased {
         for(uint i=0;i<beneficiaryAccounts.length;i++) {
             beneficiaryAccounts[i].transfer(inheritance[beneficiaryAccounts[i]]);
         }
     }
+
+
 
     // QUESTION? How would this function get called if the owner is deceased? 
     
