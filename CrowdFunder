@@ -42,12 +42,12 @@ contract CrowdFunder {
    //MODIFIERS
 
     modifier inState(State _state) {
-        require(state == _state);
+        require(state == _state, "Incorrect state!");
         _;
     }
 
     modifier isOwner() {
-        require(msg.sender == owner);
+        require(msg.sender == owner, "you are not the contract owner!");
         _;
     }
 
