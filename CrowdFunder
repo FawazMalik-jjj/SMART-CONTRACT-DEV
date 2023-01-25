@@ -1,0 +1,70 @@
+//SPDX-Licenser-Identifier : MIT
+pragma solidity ^0.6.6;
+
+contract CrowdFunder {
+    // contract owner
+    address public owner;
+
+    //recipient of the crowd fund hwich may not be the same as contract owner
+    address payable public fundRecipient;
+
+    //Has the funding goal been reached in the set ampunt of time?
+    // If not, the contributors get there money back .
+
+    uint public minimumToRaise;
+
+    string campaignURL;
+    byte version = "1";
+
+    //STRUCTURES
+
+    enum State {Fundraising, ExpiredRefund, Successful}
+
+    struct Contribution {
+        uint amount;
+        address payable contributor;
+
+    }
+
+    //STATE VARIABLES
+
+    State public state = State.Fundraising;
+    uint public totalRaised;
+    uint public raiseBy;
+    uint public completeAt;
+    Contribution[] contributions;
+
+
+    // EVENTS
+   event LogFundingReceived(address addr, uint amount, uint currentTotal);
+   event LogRecipientPaid(address recipientAddress);
+
+   //MODIFIERS
+
+    modifier inState(State _state) {
+        require(state == _state);
+        _;
+    }
+
+    modifier isOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    modifier atEndofLifeCycle() {
+        require(((state==State.ExpiredRefund || state==State.Successful) && completeAt + 2 weeks < now));
+        _;
+    }
+
+    //FUNCTIONS
+
+    function crowdFund(uint timeInHoursForFundraising, string memory _campaignURL, address payable _fundRecipient, uint _minimumToRaise) public {
+        owner = msg.sender;
+    fundRecipient = _fundRecipient;
+    campaignURL = _campaignURL;
+    minimumToRaise= _minimumToRaise;
+    raiseBy = now + (timeInHoursForFundraising * 1 hours); 
+
+    }
+    
+}
