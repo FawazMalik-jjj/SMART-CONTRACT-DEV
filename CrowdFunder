@@ -66,5 +66,52 @@ contract CrowdFunder {
     raiseBy = now + (timeInHoursForFundraising * 1 hours); 
 
     }
+
+    function contribute() public payable inState(State.Fundraising) returns (uint id) {
+        // using an array which we can iterate over 
+        contributions.push(Contribution({amount:1, contributor:msg.sender}));
+        totalRaised+= 1;
+        emit LogFundingReceived(msg.sender, 1, totalRaised);
+        checkIfFundingCompleteOrExpired();
+        //returns the id, which is the correct contributions index 
+        return contributions.length - 1;
+
+
+
+    }
+
+    function checkIfFundingCompleteOrExpired() public {
+        if (totalRaised > minimumToRaise) {
+            state = State.Successful;
+            payOut();
+        } else if (now > raiseBy) {
+            //Contributors to the successful crowdfunding can now aks for a refund.
+            //They will do that by calling the function getRefund(id)
+            state = State.ExpiredRefund; 
+        }
+        completeAt = now;
+
+    }
+
+    function payOut() public inState(State.Successful) {
+        fundRecipient.transfer(address(this).balance);
+        LogRecipientPaid(fundRecipient);
+
+    }
     
+    function getRefund(uint _id) inState(State.ExpiredRefund) public returns (bool) {
+        require (contributions.length > _id && _id >=0 && contributions[_id].amount != 0);
+        uint amountToRefund = contributions[_id].amount;
+        //ZERO the amount before doing the transfer!
+        contributions[_id].amount = 0;
+        contributions[_id].contributor.transfer(amountToRefund);
+        return true;
+    }
+
+    function removeContract() public isOwner() atEndofLifeCycle() {
+        // contract owner will recieve any remaining Ether in the smart contract
+        // The selfdestruct(address) function removes all bytecode from the blockchain, and sends ether to the address.
+
+        selfdestruct(msg.sender);
+    }
 }
