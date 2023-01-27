@@ -82,8 +82,8 @@ contract ERC20 is IERC20 {
      */
     function transfer(address to, uint256 amount) public virtual override returns (bool) {
     
-         /* <------ Your code goes here ------->
-         */
+         
+      
          require(to != address(0), "to address cannot be the zero address");
          require(msg.sender.balance >= amount, "Insufficient balance");
          msg.sender.transfer(amount);
@@ -110,8 +110,7 @@ contract ERC20 is IERC20 {
      * - `spender` cannot be the zero address.
      */
     function approve(address spender, uint256 amount) public virtual override returns (bool) {
-         /* <------ Your code goes here ------->
-         */
+     
            require(to != address(0), "Cannot transfer to the zero address.");
     require(msg.sender.balance >= amount, "Insufficient balance.");
 
@@ -137,8 +136,8 @@ contract ERC20 is IERC20 {
      * `amount`.
      */
     function transferFrom(address from, address to, uint256 amount) public virtual override returns (bool) {
-          /* <------ Your code goes here ------->
-         */
+          
+         
           require(from != address(0) && to != address(0), "Cannot transfer to or from the zero address.");
     require(balanceOf[from] >= amount, "Insufficient balance in 'from' account.");
     require(allowance[msg.sender][from] >= amount, "Insufficient allowance for 'from' tokens.");
@@ -207,9 +206,7 @@ contract ERC20 is IERC20 {
      */
     function _transfer(address from, address to, uint256 amount) internal virtual {
        
-         /* <------ Your code goes here ------->
-         */
-
+      
           require(from != address(0), "From address cannot be the zero address");
     require(to != address(0), "To address cannot be the zero address");
     require(balanceOf[from] >= amount, "From address does not have enough balance");
@@ -326,7 +323,9 @@ contract ERC20 is IERC20 {
      *
      * To learn more about hooks, head to xref:ROOT:extending-contracts.adoc#using-hooks[Using Hooks].
      */
-    function _beforeTokenTransfer(address from, address to, uint256 amount) internal virtual {}
+    function _beforeTokenTransfer(address from, address to, uint256 amount) internal virtual {
+
+    }
 
     /**
      * @dev Hook that is called after any transfer of tokens. This includes
@@ -344,6 +343,11 @@ contract ERC20 is IERC20 {
      */
   function _afterTokenTransfer(address from, address to, uint256 amount) internal virtual {
 
-  }
+      
+     }
+
 }
+
+
+
 
