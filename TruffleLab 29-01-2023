@@ -25,3 +25,19 @@ contract("MytrufflebyteContract", () => {
   });
 });
 
+TRUFFLE TEST CASE 3
+
+const SimpleTestStorage = artifacts.require("SimpleTestStorage");
+
+contract("SimpleTestStorage", function (accounts) {
+    it("should set and retrieve data correctly", async function () {
+        let contract = await SimpleTestStorage.new();
+        let data = 123456;
+
+        await contract.setData(data);
+        let result = await contract.getData();
+
+        assert.equal(result, data, "Data was not set and retrieved correctly");
+    });
+});
+
