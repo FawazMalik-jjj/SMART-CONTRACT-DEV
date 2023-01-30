@@ -1,0 +1,27 @@
+//TRUFFLE TEST CASE 1
+
+const assert = require('assert');
+const MytruffleContract = artifacts.require("MytruffleContract");
+
+contract("MyTruffleContract", () => {
+  it("should pass this test case", async () => {
+    const mytruffleContractInstance = await MytruffleContract.deployed();
+    const result = await MytruffleContractInstance.myMethod();
+    assert.equal(result, "expected value", "Test case 1 failed");
+  });
+});
+
+
+//TRUFFLE TEST CASE 2
+
+const assert = require('assert');
+const MytrufflebyteContract = artifacts.require("MytrufflebyteContract");
+
+contract("MytrufflebyteContract", () => {
+  it("should pass this test case", async () => {
+    const mytufflebyteContractInstance = await MytrufflebyteContract.deployed();
+    const result = await  mytufflebyteContractInstanc.myMethod();
+    assert.equal(result, "expected value", "Test case 2 failed");
+  });
+});
+
